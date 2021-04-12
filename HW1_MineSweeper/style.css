@@ -6,8 +6,44 @@ main{
 }
 
 h1 {
-    color: deeppink;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #F84ED2;
     text-align: center;
+    background-color: #2C424A;
+    height: 100px;
+}
+#status{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+#mineCounter{
+    display: flex;
+}
+
+#restartButton input{
+    padding: 20px;
+    border: 2px solid #2C424A;
+    color: #2C424A;
+    outline: 0;
+    border-radius: 30px;
+}
+
+#restartButton input:active{
+    background-color: #F84ED2;
+}
+
+#gameBoard{
+    border: 2px solid black;
+    position: absolute;
+    top: 100px;
+    left: 50%;
+    transform: translate(-50%, -3%);
+    margin-bottom: 100px
 }
 
 .row {
@@ -16,27 +52,10 @@ h1 {
 }
 
 .cell {
-    border: 1px solid #ccc;
+    border: 2px solid #ccc;
     padding: 3px;
     width: 30px;
     height: 30px;
     text-align: center;
 }
 
-#status{
-    display: flex;
-    justify-content: space-evenly;
-    margin-bottom: 20px;
-}
-
-#mineCounter{
-    display: flex;
-}
-
-#gameBoard{
-    position: absolute;
-    top: 100px;
-    left: 50%;
-    transform: translate(-50%, -3%);
-    margin-bottom: 100px
-}

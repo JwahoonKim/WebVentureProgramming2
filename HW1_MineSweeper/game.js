@@ -1,18 +1,3 @@
-// == 은 전부 === 으로 고쳐야해!!!!!!!!
-/* <더 추가해야할 기능>
-2. status 관련 3가지 구현해야함
-    2) 현재 남은 지뢰 개수
-3. 게임 종료조건에 대한 것 구현해야함
-    1) 지뢰 클릭해버린 경우 --> 게임보드 핵폭탄 이미지 추가
-    2) 게임 성공한 경우
-6. 디자인 관련
-    1) 깃발 모양
-    2) 게임보드 디자인
-    3) status 디자인
-    4) 기타 명령창, input창 디자인   
-*/
-
-
 function Game(){
     const gameBoard = document.getElementById('gameBoard');
     const mineCounter = document.querySelector('.remainingMine');
@@ -21,9 +6,9 @@ function Game(){
     let rows = [];
     let width;
     let height;
-    let numberOfMine;
+    let numberOfMines;
     
-    //w, h, 지뢰수 입력 받기 
+    //width, height, 지뢰수 입력 받기 
     function setGameBoard(){
         while(true){
             width = prompt("Width를 입력하세요. 5 ~ 30 사이로!");
@@ -80,7 +65,7 @@ function Game(){
                 // 좌클릭에 대한 반응
                 dom.addEventListener('click', function(){
                     if(cell.clicked || cell.flagged) return;
-                    if(cell.isMine) return gameOver(false);
+                    if(cell.isMine) return gameOver(false, interval);
 
                     cell.clicked = true;
                     const neighbors = getNeighbors(cell);
@@ -89,7 +74,8 @@ function Game(){
                     // 클릭한 곳 주변 지뢰가 0개라면 9개 방향 cell을 전부 open 해야한다.
                     if (cell.dom.textContent === '0'){
                         crushAroundZero(cell);
-                    }  
+                    }
+                    if(checkEnd() === true) return gameOver(true, interval);  
                 });
 
                 // 우클릭에 대한 반응
@@ -99,12 +85,20 @@ function Game(){
                     if(cell.flagged){
                         cell.flagged = false;      
                         cell.dom.textContent = '';
-                        // if(numberOfMines < width * height) numberOfMines ++;
+                        mineCounter.textContent = parseInt(mineCounter.textContent) + 1;
                     } 
                     else {
-                        cell.flagged = true;
-                        cell.dom.textContent = 'P';
-                        // if(numberOfMines > 0) numberOfMines --;
+                        if(mineCounter.textContent > '0'){
+                            cell.flagged = true;
+                            cell.dom.textContent = '🚩';
+                            mineCounter.textContent = parseInt(mineCounter.textContent) - 1;
+                            if(checkEnd() === true){
+                                return gameOver(true, interval);
+                            } 
+                        } 
+                        else{
+                            alert("지뢰수보다 많은 깃발을 꽂을 수 없어요!");
+                        }
                     }
                 });
             }
@@ -120,15 +114,32 @@ function Game(){
             initGame();
         });
 
+        function checkEnd(){
+            for(let i = 0; i < width; i ++){
+                for(let j = 0; j < height; j++){
+                    const nowCell = rows[j][i];
+                    if(nowCell.isMine){
+                        if(!nowCell.flagged) return false;
+                    }
+                    else if(!nowCell.isMine){
+                        if(!nowCell.clicked) return false;
+                    }
+                }
+            }
+            return true;
+        }
     }
 
-    function gameOver(isWin){
+    function gameOver(isWin, interval){
+        clearInterval(interval);
         if(!isWin){
             alert("지뢰가 터져버렸습니다!");
+            return;
         }
         // 다 깬 경우 if문 추가
         if(isWin){
-            alert.log(`지뢰를 전부 제거하는데 성공하였습니다! 걸린 시간은 ${seconds}초!`)
+            alert(`지뢰를 전부 제거하는데 성공하였습니다!`);
+            return;
         } 
     };
 
@@ -172,7 +183,7 @@ function Game(){
                 const ny = y + dy[t];
                 if (0 <= nx && nx < width && 0 <= ny && ny < height){
                     const curCell = rows[ny][nx];
-                    if(!curCell.isMine){
+                    if((!curCell.isMine) && curCell.flagged === false ){
                         curCell.dom.textContent = getNeighbors(curCell).filter(neighbor => neighbor.isMine === true).length;
                         curCell.clicked = true;
                         if(visited[ny][nx] === false && curCell.dom.textContent === '0'){
@@ -195,7 +206,6 @@ function Game(){
             count ++;
         }
     }
-
 
     initGame();
 }
