@@ -9,11 +9,14 @@
     <h1>Play MineSweeper!</h1>
     <main>
         <div id="status">
-<!--   이부분은 js로 게임 시작하면 생기게 하자
-            <div id="mineCounter"></div>
-            <div id="restartButton"></div>
-            <div id="timer"></div>
-             -->
+            <div id="mineCounter">
+                <div class="mineText">남은 지뢰의 개수: </div>
+                <div class="remainingMine"></div>
+            </div>
+            <div id="restartButton">
+                <input type="button" value="RESTART!">
+            </div>
+            <div id="timer">TIME : 0s</div>
         </div>
         <div id="gameBoard"></div>
     </main>
