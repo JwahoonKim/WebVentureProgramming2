@@ -7,7 +7,9 @@ function Game(){
     let width;
     let height;
     let numberOfMines;
-    
+    let interval;
+    let timerPause = true;
+
     //width, height, 지뢰수 입력 받기 
     function setGameBoard(){
         while(true){
@@ -36,8 +38,10 @@ function Game(){
             seconds ++;
             timer.textContent = "TIME : " + seconds +"s";            
         }
-        const interval = setInterval(addSecond, 1000);
-
+        if(timerPause){
+            timerPause = false;
+            interval = setInterval(addSecond, 1000);
+        }
         // 행 생성해주기
         for(let i = 0; i < height ; i++){
             const row = [];
@@ -104,13 +108,17 @@ function Game(){
             }
         }
         plantMines();
+        
         restartButton.addEventListener('click', function(){
             rows = [];
             for(let i = 0; i < height; i++) {
                 let row = document.querySelector('.row');
                 gameBoard.removeChild(row);
             }
-            clearInterval(interval);
+            if(!timerPause){
+                timerPause = true;
+                clearInterval(interval);
+            }
             initGame();
         });
 
@@ -131,14 +139,17 @@ function Game(){
     }
 
     function gameOver(isWin, interval){
-        clearInterval(interval);
+        if(!timerPause){
+            timerPause = true;
+            clearInterval(interval);
+        }
         if(!isWin){
-            alert("지뢰가 터져버렸습니다!");
+            alert("지뢰가 터져버렸습니다! GameOver!");
             return;
         }
         // 다 깬 경우 if문 추가
         if(isWin){
-            alert(`지뢰를 전부 제거하는데 성공하였습니다!`);
+            alert("지뢰를 전부 제거하는데 성공하였습니다! Clear!");
             return;
         } 
     };
